@@ -6,7 +6,7 @@ import java.io.*;
 public class ArrayListTest {
 
 	public static void main(String[] args) throws IOException{
-			
+		//i love henry
 		File cip = new File("/Users/Emily/Desktop/cipcs115.txt");
 		Scanner canScan = new Scanner(cip);
 		
