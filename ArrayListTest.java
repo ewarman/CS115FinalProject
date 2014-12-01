@@ -12,10 +12,19 @@ public class ArrayListTest {
 		
 		ArrayList<Candidate> candidates = new ArrayList<Candidate>();
 		String line = "";
+		String state;
+		int numReps;
 		int numCandidate = 0;
+		line = canScan.nextLine();
 		while(!line.equals("END_OF_FILE")) {
-			line = canScan.nextLine();
-			if (line.contains("\t")) {
+			state = line;
+			System.out.println(state);
+			numReps = canScan.nextInt();
+			canScan.nextLine();
+			System.out.println(numReps);
+			for(int i=0;i<numReps;i++){
+				line = canScan.nextLine();
+				System.out.println(line);
 				//calls constructor for candidate in array
 				Candidate c = new Candidate();
 				//splits line into parts
@@ -27,9 +36,11 @@ public class ArrayListTest {
 				c.setVotes(Integer.parseInt(parts[3]));
 				c.setDollarsSpent(Double.parseDouble(parts[4]));
 				c.setMotto(parts[5]);
+				c.setState(state);
 				candidates.add(c);
-				numCandidate++;
+				numCandidate++;				
 			}
+			line = canScan.nextLine();
 		}
 		
 		//calling static methods in main example
