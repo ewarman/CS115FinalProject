@@ -6,7 +6,6 @@ import java.io.*;
 public class ArrayListTest {
 
 	public static void main(String[] args) throws IOException{
-		//i love henry
 		File cip = new File("/Users/Emily/Desktop/cipcs115.txt");
 		Scanner canScan = new Scanner(cip);
 		
@@ -18,13 +17,10 @@ public class ArrayListTest {
 		line = canScan.nextLine();
 		while(!line.equals("END_OF_FILE")) {
 			state = line;
-			System.out.println(state);
 			numReps = canScan.nextInt();
 			canScan.nextLine();
-			System.out.println(numReps);
 			for(int i=0;i<numReps;i++){
 				line = canScan.nextLine();
-				System.out.println(line);
 				//calls constructor for candidate in array
 				Candidate c = new Candidate();
 				//splits line into parts
@@ -42,7 +38,6 @@ public class ArrayListTest {
 			}
 			line = canScan.nextLine();
 		}
-		
 		//calling static methods in main example
 		//listAll(candidates);
 		menu(candidates);
@@ -66,9 +61,17 @@ public class ArrayListTest {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Learn more about your candidates:\n\tOPTIONS\n Enter L to list all \n Enter C for candidate report \n Enter V for vote report \n Enter S for state report \n Enter D for dollars spent report \n Enter P for party report \n Enter Q to quit");
 		
+		String input;
 		char a = '\0';
+		//had a problem where if you typed in a word starting with one of the option characters, the program didn't recognize that wasn't an option. added this if statement to make all user inputs longer than one character count for "not an option" & not call method.
 		while(a != 'q' && a != 'Q') {
-			a = scan.next().charAt(0);
+			input = scan.next();
+			if (input.length() != 1) {
+				a = 'x';
+			}
+			else {
+				a = input.charAt(0);
+			}
 			switch (a) {
 				case 'L':
 				case 'l':
@@ -138,14 +141,43 @@ public class ArrayListTest {
 	}
 	
 	public static boolean voteReport(ArrayList<Candidate> alc) {
-//		ArrayList <Candidate> presidents = new ArrayList<Candidate>();
-//		ArrayList <Candidate> governers = new ArrayList<Candidate>();
-//		ArrayList <Candidate> mayors = new ArrayList<Candidate>();
-//		ArrayList <Candidate> instructors = new ArrayList<Candidate>();
-//		Scanner scan = new Scanner(System.in);
-//		System.out.println("Enter the candidate name OR 'all':");
-//		String searchName = scan.nextLine().toLowerCase();
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter state and office OR 'all':");
+		String userInput = scan.nextLine().toLowerCase();
+		//check for two words
+		int spaceCounter = 0;
+		for( int i=0; i<userInput.length(); i++ ) {
+		    if( userInput.charAt(i) == ' ' ) {
+		        spaceCounter++;
+		    } 
+		}
+		if (spaceCounter == 1 || userInput.equals("all")) {
+			if (userInput.equals("all")) {
+				System.out.println("you typed in all");
+			}
+			else {
+			String [] parts = userInput.split(" ");
+			String state = parts[0];
+			String office = parts [1];
+			int canCounter = 0;
+			for (int i = 0; i<alc.size(); i++) {
+				Candidate oC = alc.get(i);
+					if (oC.getState().toLowerCase().equals(state) && oC.getOffice().toLowerCase().equals(office))	{
+						oC.display();
+						canCounter++;
+					}
+			}
+			//if no instances of state and election race are found in a two word entry, return false
+				if (canCounter == 0) {
+					System.out.println("No election race found");
+				}
+				
+			}
+		}
 		
+		else {
+			System.out.println("No election race found");
+		}
 		return true;
 	}
 	
