@@ -163,13 +163,30 @@ public class ArrayListTest {
 			for (int i = 0; i<alc.size(); i++) {
 				Candidate oC = alc.get(i);
 					if (oC.getState().toLowerCase().equals(state) && oC.getOffice().toLowerCase().equals(office))	{
-						oC.display();
 						canCounter++;
 					}
 			}
 			//if no instances of state and election race are found in a two word entry, return false
 				if (canCounter == 0) {
 					System.out.println("No election race found");
+				}
+				
+				if (canCounter > 0) {
+					System.out.println(state+ " " +office+ "'s race");
+					ArrayList <Candidate> election= new ArrayList<Candidate>();
+					double sumVotes = 0;
+					for (int i = 0; i<alc.size(); i++) {
+						Candidate oC = alc.get(i);
+							if (oC.getState().toLowerCase().equals(state) && oC.getOffice().toLowerCase().equals(office))	{
+								election.add(oC);
+								sumVotes+=oC.getVotes();
+							}
+					}
+					for (int i = 0; i<election.size(); i++) {
+						Candidate oC = election.get(i);
+						double percentVotes = oC.getVotes()/sumVotes*100;
+						System.out.println(oC.getName()+"\t"+oC.getVotes()+"\t"+ percentVotes+"%");
+					}
 				}
 				
 			}
