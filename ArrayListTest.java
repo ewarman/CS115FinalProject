@@ -8,6 +8,7 @@ public class ArrayListTest {
 	public static void main(String[] args) throws IOException{
 		File cip = new File("/Users/Emily/Desktop/cipcs115.txt");
 		Scanner canScan = new Scanner(cip);
+		Scanner scan = new Scanner(System.in);
 		
 		ArrayList<Candidate> candidates = new ArrayList<Candidate>();
 		String line = "";
@@ -39,11 +40,25 @@ public class ArrayListTest {
 			line = canScan.nextLine();
 		}
 		candidates.trimToSize();
-		//calling static methods in main example
-		//listAll(candidates);
-		menu(candidates);
+		//prompt user for menu or final stats
+		//add example for vote report
+		String userInput = "";
+		while (!userInput.equals("menu") || !userInput.equals("final stats")) {
+			System.out.println("Menu or final stats?");
+			userInput = scan.nextLine();
+			if (userInput.equalsIgnoreCase("menu") || userInput.equalsIgnoreCase("final stats")) {
+				break;
+			}
+		}
+		if (userInput.equalsIgnoreCase("menu")) {
+			menu(candidates);
+		}
+		else {
+			finalStats();
+		}
 	}
 	
+	/*The listAll method takes an arrayList of candidates and displays all candidates' names, parties, and mottos*/
 	public static void listAll(ArrayList<Candidate> alc) {
 		for(int i = 0; i< alc.size(); i++) {
 			Candidate oC = alc.get(i);
@@ -66,6 +81,7 @@ public class ArrayListTest {
 		char a = '\0';
 		//had a problem where if you typed in a word starting with one of the option characters, the program didn't recognize that wasn't an option. added this if statement to make all user inputs longer than one character count for "not an option" & not call method.
 		while(a != 'q' && a != 'Q') {
+			System.out.println("\tOPTIONS\n Enter L to list all \n Enter C for candidate report \n Enter V for vote report \n Enter S for state report \n Enter D for dollars spent report \n Enter P for party report \n Enter Q to quit");
 			input = scan.next();
 			if (input.length() != 1) {
 				a = 'x';
@@ -106,6 +122,7 @@ public class ArrayListTest {
 					break;
 				default:
 					if (a=='q' || a=='Q'){
+						finalStats();
 						break;
 					}
 					else {
@@ -143,7 +160,7 @@ public class ArrayListTest {
 	
 	public static boolean voteReport(ArrayList<Candidate> alc) {
 		Scanner scan = new Scanner(System.in);
-		System.out.println("Enter state and office OR 'all':");
+		System.out.println("Enter state and office (ex. illinois president) OR 'all':");
 		String userInput = scan.nextLine().toLowerCase();
 		//check for two words
 		int spaceCounter = 0;
@@ -219,22 +236,18 @@ public class ArrayListTest {
 			ArrayList<Candidate> statePeople = new ArrayList<Candidate>();
 			double tDollarsSpent = 0;
 			for (int i = 0; i<alc.size(); i++) {
-				if (alc.get(i).getState().toLowerCase().equals(state)){
-					Candidate oC = alc.get(i);
-					statePeople.add(oC);
-					tDollarsSpent+= oC.getDollarsSpent();
-					System.out.println(oC.getState());
+				
+				//if (alc.get(i).getState().toLowerCase().equals(state)){
+//					Candidate oC = alc.get(i);
+//					System.out.println(oC.getState());
+//					statePeople.add(oC);
+//					tDollarsSpent+= oC.getDollarsSpent();
+//					System.out.println(oC.getState());
 					//System.out.printf(" %-15s %-6s %-17s %-10d %n", oC.getName(), oC.getOffice(), oC.getParty(), oC.getDollarsSpent());
 				}
 			}
-		}
-		else {
-			System.out.println("No state found.");
-			return false;
-		}
 		return true;
-	
-	}
+		}
 	
 	public static boolean dollarsSpentReport(ArrayList<Candidate> alc) {
 		ArrayList <Candidate> democrats = new ArrayList<Candidate>();
@@ -264,22 +277,22 @@ public class ArrayListTest {
 		}	
 		if (searchName.equals("all")) {
 			
-			System.out.println("Democrat Spending:");
+			System.out.println("\nDemocrat Spending:");
 			for (int i = 0; i<democrats.size(); i++) {
 				Candidate oC = democrats.get(i);
 				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
-			System.out.println("Republican Spending:");
+			System.out.println("\nRepublican Spending:");
 			for (int i = 0; i<republicans.size(); i++) {
 				Candidate oC = republicans.get(i);
 				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
-			System.out.println("Independent Spending:");
+			System.out.println("\nIndependent Spending:");
 			for (int i = 0; i<independent.size(); i++) {
 				Candidate oC = independent.get(i);
 				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
-			System.out.println("Other Spending:");
+			System.out.println("\nOther Spending:");
 			for (int i = 0; i<other.size(); i++) {
 				Candidate oC = other.get(i);
 				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
@@ -392,6 +405,7 @@ public class ArrayListTest {
 	}
 	
 	public static String finalStats() {
+		System.out.println("You called final stats");
 		return "FINISHED";
 	}
 }
