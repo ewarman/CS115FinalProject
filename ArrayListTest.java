@@ -38,6 +38,7 @@ public class ArrayListTest {
 			}
 			line = canScan.nextLine();
 		}
+		candidates.trimToSize();
 		//calling static methods in main example
 		//listAll(candidates);
 		menu(candidates);
@@ -46,7 +47,7 @@ public class ArrayListTest {
 	public static void listAll(ArrayList<Candidate> alc) {
 		for(int i = 0; i< alc.size(); i++) {
 			Candidate oC = alc.get(i);
-			System.out.println(oC.getName()+"\n"+oC.getParty()+"\n"+oC.getMotto()+"\n");
+			System.out.printf( "%-15s %-5s %-15s %n", oC.getName(), oC.getParty(), oC.getMotto());
 		}
 	}
 	
@@ -185,7 +186,7 @@ public class ArrayListTest {
 					for (int i = 0; i<election.size(); i++) {
 						Candidate oC = election.get(i);
 						double percentVotes = oC.getVotes()/sumVotes*100;
-						System.out.println(oC.getName()+"\t"+oC.getVotes()+"\t"+ percentVotes+"%");
+						System.out.printf("%-19s %-11s %-27.3f %n", oC.getName(), oC.getVotes(), percentVotes);
 					}
 				}
 				
@@ -199,7 +200,40 @@ public class ArrayListTest {
 	}
 	
 	public static boolean stateReport(ArrayList<Candidate> alc) {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter state OR 'all':");
+		String userInput = scan.nextLine().toLowerCase();
+		String state = "";
+		ArrayList <String> states = new ArrayList<String>();
+		for (int i = 0; i<alc.size(); i++) {
+			if (alc.get(i).getState() != state) {
+				state = alc.get(i).getState().toLowerCase();
+				states.add(state);
+			}
+		}
+		if (userInput.equals("all")) {
+			System.out.println("typed in all");
+		}
+		else if (states.contains(userInput)) {
+			System.out.println("your state is: " +userInput);
+			ArrayList<Candidate> statePeople = new ArrayList<Candidate>();
+			double tDollarsSpent = 0;
+			for (int i = 0; i<alc.size(); i++) {
+				if (alc.get(i).getState().toLowerCase().equals(state)){
+					Candidate oC = alc.get(i);
+					statePeople.add(oC);
+					tDollarsSpent+= oC.getDollarsSpent();
+					System.out.println(oC.getState());
+					//System.out.printf(" %-15s %-6s %-17s %-10d %n", oC.getName(), oC.getOffice(), oC.getParty(), oC.getDollarsSpent());
+				}
+			}
+		}
+		else {
+			System.out.println("No state found.");
+			return false;
+		}
 		return true;
+	
 	}
 	
 	public static boolean dollarsSpentReport(ArrayList<Candidate> alc) {
@@ -233,22 +267,22 @@ public class ArrayListTest {
 			System.out.println("Democrat Spending:");
 			for (int i = 0; i<democrats.size(); i++) {
 				Candidate oC = democrats.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice()+"\t"+oC.getParty()+"\t"+oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			System.out.println("Republican Spending:");
 			for (int i = 0; i<republicans.size(); i++) {
 				Candidate oC = republicans.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice()+"\t"+oC.getParty()+"\t"+oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			System.out.println("Independent Spending:");
 			for (int i = 0; i<independent.size(); i++) {
 				Candidate oC = independent.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice()+"\t"+oC.getParty()+"\t"+oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			System.out.println("Other Spending:");
 			for (int i = 0; i<other.size(); i++) {
 				Candidate oC = other.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice()+"\t"+oC.getParty()+"\t"+oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			return true;
 		}
@@ -263,7 +297,7 @@ public class ArrayListTest {
 		}
 		if (counter>0){
 			Candidate oC = alc.get(iVal);
-			System.out.println(oC.getName()+"\t"+oC.getOffice()+"\t"+oC.getParty()+"\t"+oC.getDollarsSpent());
+			System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			return true;
 		}
 		else {
@@ -278,8 +312,8 @@ public class ArrayListTest {
 		ArrayList <Candidate> independent = new ArrayList<Candidate>();
 		ArrayList <Candidate> other = new ArrayList<Candidate>();
 		Scanner scan = new Scanner(System.in);
-		System.out.println("Enter name you'd like to search OR 'all': ");
-		String searchName = scan.nextLine();
+		System.out.println("Enter party you'd like to search OR 'all': ");
+		String searchName = scan.nextLine().toLowerCase();
 		//sorting by parties
 		for (int i = 0; i<alc.size(); i++) {
 			char party = alc.get(i).getParty();
@@ -303,44 +337,58 @@ public class ArrayListTest {
 			System.out.println("Democrats:");
 			for (int i = 0; i<democrats.size(); i++) {
 				Candidate oC = democrats.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice());
+				System.out.printf("%-19s %-15s %-10s %n", oC.getName(),oC.getOffice(),oC.getState());
 			}
 			System.out.println("Republicans:");
 			for (int i = 0; i<republicans.size(); i++) {
 				Candidate oC = republicans.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice());
+				System.out.printf("%-19s %-15s %-10s %n", oC.getName(),oC.getOffice(),oC.getState());
 			}
 			System.out.println("Independents:");
 			for (int i = 0; i<independent.size(); i++) {
 				Candidate oC = independent.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice());
+				System.out.printf("%-19s %-15s %-10s %n", oC.getName(),oC.getOffice(),oC.getState());
 			}
 			System.out.println("Others:");
 			for (int i = 0; i<other.size(); i++) {
 				Candidate oC = other.get(i);
-				System.out.println(oC.getName()+"\t"+oC.getOffice());
+				System.out.printf("%-19s %-15s %-10s %n", oC.getName(),oC.getOffice(),oC.getState());
 			}
 			return true;
 		}
-		//GET NAME
-		int counter = 0;
-		int iVal = 0;
-		for (int i = 0; i<alc.size(); i++) {
-			String testName = alc.get(i).getName().toLowerCase();
-				if (testName.equals(searchName)) {
-					counter++;
-					iVal = i;
-				}
-		}
-		if (counter>0){
-			Candidate oC = alc.get(iVal);
-			System.out.println(oC.getName()+"\t"+oC.getOffice());
-			return true;
-		}
-		else {
-			System.out.println("No candidate found");
+		char partyLetter = searchName.charAt(0);
+		String partyName = " ";
+		ArrayList <Candidate> sortParameter;
+		switch (partyLetter){
+		case 'd':
+			sortParameter = democrats;
+			partyName = "Democrats";
+			break;
+		case 'r':
+			sortParameter = republicans;
+			partyName = "Republicans";
+			break;
+		case 'i':
+			sortParameter = independent;
+			partyName = "Independents";
+			break;
+		case 'o':
+			partyName = "Others";
+			sortParameter = other;
+			break;
+		default:
+			System.out.println("No party found");
 			return false;
 		}
+		if (partyName != " ") {
+		System.out.println(partyName);
+		for (int i = 0; i<sortParameter.size(); i++) {
+			Candidate oC = sortParameter.get(i);
+			System.out.printf("%-19s %-15s %-10s %n", oC.getName(),oC.getOffice(),oC.getState());
+		}
+		}
+		return true;
+		
 	}
 	
 	public static String finalStats() {

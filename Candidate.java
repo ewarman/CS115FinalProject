@@ -86,7 +86,7 @@ public class Candidate {
 	
 	//display method
 	public void display() {
-		System.out.println(nameOfCandidate+"\t"+electionOffice+"\t"+party+"\t"+dollarsSpent+"\t"+votes+"\t"+motto);
+		System.out.printf("%-19s %-15s %-6s %-17s %-11s %-27s %n", nameOfCandidate, electionOffice, party, dollarsSpent, votes, motto);
 	}
 	
 	//equals method
