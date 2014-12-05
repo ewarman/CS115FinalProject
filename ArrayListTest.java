@@ -11,6 +11,7 @@ public class ArrayListTest {
 		Scanner scan = new Scanner(System.in);
 		
 		ArrayList<Candidate> candidates = new ArrayList<Candidate>();
+		ArrayList<Integer> counter = new ArrayList<Integer>();
 		String line = "";
 		String state;
 		int numReps;
@@ -38,19 +39,23 @@ public class ArrayListTest {
 			line = canScan.nextLine();
 		}
 		candidates.trimToSize();
+		for (int i = 0; i<8; i++) {
+			counter.add(0);
+		}
 		String userInput = "";
-		while (!userInput.equals("menu") || !userInput.equals("final stats")) {
-			System.out.println("Menu or final stats?");
-			userInput = scan.nextLine();
-			if (userInput.equalsIgnoreCase("menu") || userInput.equalsIgnoreCase("final stats")) {
+		while (!userInput.equals("menu") && !userInput.equals("final stats")) {
+			System.out.println("Menu (m) or final stats (q)?");
+			userInput = scan.next();
+			if (userInput.equalsIgnoreCase("m")) {
+				menu(candidates,counter);
+			}
+			else if (userInput.equalsIgnoreCase("q")) {
+				finalStats(counter);
 				break;
 			}
-		}
-		if (userInput.equalsIgnoreCase("menu")) {
-			menu(candidates);
-		}
-		else {
-			finalStats();
+			else {
+				System.out.println("Try again");
+			}
 		}
 	}
 	
@@ -62,20 +67,10 @@ public class ArrayListTest {
 		}
 	}
 	
-	public static ArrayList<Integer> menu(ArrayList<Candidate> alc) {
-		//COUNTER -- instantiate arrayList of 6
-		ArrayList<Integer> counter = new ArrayList<Integer>();
-		for (int i = 0; i<7; i++) {
-			counter.add(0);
-		}
-		
-		//the menu
+	public static boolean menu(ArrayList<Candidate> alc, ArrayList<Integer> counter) {
 		Scanner scan = new Scanner(System.in);
-		System.out.println("Learn more about your candidates:\n\tOPTIONS\n Enter L to list all \n Enter C for candidate report \n Enter V for vote report \n Enter S for state report \n Enter D for dollars spent report \n Enter P for party report \n Enter Q to quit");
-		
 		String input;
 		char a = '\0';
-		//had a problem where if you typed in a word starting with one of the option characters, the program didn't recognize that wasn't an option. added this if statement to make all user inputs longer than one character count for "not an option" & not call method.
 		while(a != 'q' && a != 'Q') {
 			System.out.println("\tOPTIONS\n Enter L to list all \n Enter C for candidate report \n Enter V for vote report \n Enter S for state report \n Enter D for dollars spent report \n Enter P for party report \n Enter Q to quit");
 			input = scan.next();
@@ -118,17 +113,17 @@ public class ArrayListTest {
 					break;
 				default:
 					if (a=='q' || a=='Q'){
-						finalStats();
+						counter.set(6, counter.get(6)+1);
 						break;
 					}
 					else {
-						counter.set(6, counter.get(6)+1);
+						counter.set(7, counter.get(7)+1);
 						System.out.println("Not an option.");
 						break;
 					}
 				}
 			}
-		return counter;
+		return true;
 	}
 	
 	public static boolean candidateReport(ArrayList<Candidate> alc) {
@@ -219,14 +214,29 @@ public class ArrayListTest {
 		String state = "";
 		ArrayList <String> states = new ArrayList<String>();
 		for (int i = 0; i<alc.size(); i++) {
-			if (alc.get(i).getState() != state) {
+			if (alc.get(i).getState().equalsIgnoreCase(state)==false) {
 				state = alc.get(i).getState().toLowerCase();
 				states.add(state);
 			}
 		}
+		System.out.println(states.size());
 		states.trimToSize();
 		if (userInput.equals("all")) {
-			System.out.println("typed in all");
+			int count = 0;
+			for(int i = 0; i<states.size();i++) {
+				String thisState = states.get(i);
+				double tDollarsSpent = 0;
+				System.out.println("\n"+thisState.toUpperCase());
+				for (int j = 0; j<alc.size(); j++) {
+					if(alc.get(j).getState().equalsIgnoreCase(thisState)){
+						System.out.printf("%-19s %-15s %-6s %14s %n", alc.get(j).getName(), alc.get(j).getOffice(), alc.get(j).getParty(), alc.get(j).getDollarsSpent());
+						tDollarsSpent += alc.get(j).getDollarsSpent();
+						count++;
+					}
+				}
+				System.out.printf("Total dollars spent: $%.2f %n", tDollarsSpent);
+				System.out.printf("Average dollars spent: $%.2f %n", (tDollarsSpent/count));
+			}
 			return true;
 		}
 		else if (states.contains(userInput)) {
@@ -234,7 +244,7 @@ public class ArrayListTest {
 			int count = 0;
 			for (int i = 0; i<alc.size(); i++) {
 					if(alc.get(i).getState().toLowerCase().equals(userInput)) {
-						System.out.printf("%-19s %-15s %-6s %-17s %n", alc.get(i).getName(), alc.get(i).getOffice(), alc.get(i).getParty(), alc.get(i).getDollarsSpent());
+						System.out.printf("%-19s %-15s %-6s %14s %n", alc.get(i).getName(), alc.get(i).getOffice(), alc.get(i).getParty(), alc.get(i).getDollarsSpent());
 						tDollarsSpent += alc.get(i).getDollarsSpent();
 						count++;
 				}
@@ -244,7 +254,7 @@ public class ArrayListTest {
 			return true;
 		}
 		else {
-		return false;
+			return false;
 		}
 		}
 	
@@ -279,22 +289,22 @@ public class ArrayListTest {
 			System.out.println("\nDemocrat Spending:");
 			for (int i = 0; i<democrats.size(); i++) {
 				Candidate oC = democrats.get(i);
-				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %14s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			System.out.println("\nRepublican Spending:");
 			for (int i = 0; i<republicans.size(); i++) {
 				Candidate oC = republicans.get(i);
-				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %14s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			System.out.println("\nIndependent Spending:");
 			for (int i = 0; i<independent.size(); i++) {
 				Candidate oC = independent.get(i);
-				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %14s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			System.out.println("\nOther Spending:");
 			for (int i = 0; i<other.size(); i++) {
 				Candidate oC = other.get(i);
-				System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
+				System.out.printf("%-19s %-15s %-6s %14s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			}
 			return true;
 		}
@@ -309,7 +319,7 @@ public class ArrayListTest {
 		}
 		if (counter>0){
 			Candidate oC = alc.get(iVal);
-			System.out.printf("%-19s %-15s %-6s %-17s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
+			System.out.printf("%-19s %-15s %-6s %14s %n", oC.getName(),oC.getOffice(),oC.getParty(),oC.getDollarsSpent());
 			return true;
 		}
 		else {
@@ -403,8 +413,10 @@ public class ArrayListTest {
 		
 	}
 	
-	public static String finalStats() {
-		System.out.println("You called final stats");
-		return "FINISHED";
+	public static boolean finalStats(ArrayList<Integer>counter) {
+		System.out.println("Final Stats:");
+		System.out.printf("%-5s %-5s %-5s %-5s %-5s %-5s %-5s %-5s %n", 'L', 'C', 'V', 'S', 'D', 'P', 'Q', "Bad");
+		System.out.printf("%-5s %-5s %-5s %-5s %-5s %-5s %-5s %-5s", counter.get(0), counter.get(1), counter.get(2),counter.get(3), counter.get(4), counter.get(5), counter.get(6), counter.get(7));
+		return true;
 	}
 }
