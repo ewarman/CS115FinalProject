@@ -14,7 +14,6 @@ public class ArrayListTest {
 		String line = "";
 		String state;
 		int numReps;
-		int numCandidate = 0;
 		line = canScan.nextLine();
 		while(!line.equals("END_OF_FILE")) {
 			state = line;
@@ -34,14 +33,11 @@ public class ArrayListTest {
 				c.setDollarsSpent(Double.parseDouble(parts[4]));
 				c.setMotto(parts[5]);
 				c.setState(state);
-				candidates.add(c);
-				numCandidate++;				
+				candidates.add(c);			
 			}
 			line = canScan.nextLine();
 		}
 		candidates.trimToSize();
-		//prompt user for menu or final stats
-		//add example for vote report
 		String userInput = "";
 		while (!userInput.equals("menu") || !userInput.equals("final stats")) {
 			System.out.println("Menu or final stats?");
@@ -228,25 +224,28 @@ public class ArrayListTest {
 				states.add(state);
 			}
 		}
+		states.trimToSize();
 		if (userInput.equals("all")) {
 			System.out.println("typed in all");
+			return true;
 		}
 		else if (states.contains(userInput)) {
-			System.out.println("your state is: " +userInput);
-			ArrayList<Candidate> statePeople = new ArrayList<Candidate>();
 			double tDollarsSpent = 0;
+			int count = 0;
 			for (int i = 0; i<alc.size(); i++) {
-				
-				//if (alc.get(i).getState().toLowerCase().equals(state)){
-//					Candidate oC = alc.get(i);
-//					System.out.println(oC.getState());
-//					statePeople.add(oC);
-//					tDollarsSpent+= oC.getDollarsSpent();
-//					System.out.println(oC.getState());
-					//System.out.printf(" %-15s %-6s %-17s %-10d %n", oC.getName(), oC.getOffice(), oC.getParty(), oC.getDollarsSpent());
+					if(alc.get(i).getState().toLowerCase().equals(userInput)) {
+						System.out.printf("%-19s %-15s %-6s %-17s %n", alc.get(i).getName(), alc.get(i).getOffice(), alc.get(i).getParty(), alc.get(i).getDollarsSpent());
+						tDollarsSpent += alc.get(i).getDollarsSpent();
+						count++;
 				}
 			}
-		return true;
+			System.out.printf("Total dollars spent: $%.2f %n", tDollarsSpent);
+			System.out.printf("Average dollars spent: $%.2f %n", (tDollarsSpent/count));
+			return true;
+		}
+		else {
+		return false;
+		}
 		}
 	
 	public static boolean dollarsSpentReport(ArrayList<Candidate> alc) {
