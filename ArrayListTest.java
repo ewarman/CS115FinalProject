@@ -6,7 +6,7 @@ import java.io.*;
 public class ArrayListTest {
 
 	public static void main(String[] args) throws IOException{
-		File cip = new File("/Users/Emily/Desktop/cipcs115.txt");
+		File cip = new File("cipcs115.txt");
 		Scanner canScan = new Scanner(cip);
 		Scanner scan = new Scanner(System.in);
 		
@@ -43,11 +43,12 @@ public class ArrayListTest {
 			counter.add(0);
 		}
 		String userInput = "";
-		while (!userInput.equals("menu") && !userInput.equals("final stats")) {
+		while (!userInput.equals("m") && !userInput.equals("q")) {
 			System.out.println("Menu (m) or final stats (q)?");
 			userInput = scan.next();
 			if (userInput.equalsIgnoreCase("m")) {
 				menu(candidates,counter);
+				userInput = "";
 			}
 			else if (userInput.equalsIgnoreCase("q")) {
 				finalStats(counter);
@@ -61,12 +62,83 @@ public class ArrayListTest {
 	
 	/*The listAll method takes an arrayList of candidates and displays all candidates' names, parties, and mottos*/
 	public static void listAll(ArrayList<Candidate> alc) {
-		for(int i = 0; i< alc.size(); i++) {
-			Candidate oC = alc.get(i);
-			System.out.printf( "%-15s %-5s %-15s %n", oC.getName(), oC.getParty(), oC.getMotto());
+		ArrayList <Candidate> democrats = new ArrayList<Candidate>();
+		ArrayList <Candidate> republicans = new ArrayList<Candidate>();
+		ArrayList <Candidate> independent = new ArrayList<Candidate>();
+		ArrayList <Candidate> other = new ArrayList<Candidate>();
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Enter party (or parties) you'd like to search for"+"\n"+"(ex: d r i for democrats, republicans, and independents)"+"\n"+"OR enter 'all'");
+		String userInput = scan.nextLine().toLowerCase();
+		//sorting by parties
+		for (int i = 0; i<alc.size(); i++) {
+			char party = alc.get(i).getParty();
+			switch (party) {
+			case 'd':
+				democrats.add(alc.get(i));
+				break;
+			case 'r':
+				republicans.add(alc.get(i));
+				break;
+			case 'i':
+				independent.add(alc.get(i));
+				break;
+			case 'o':
+				other.add(alc.get(i));
+				break;
+			}
+		}	
+		if (userInput.equals("all")) {
+			for(int i = 0; i< alc.size(); i++) {
+				Candidate oC = alc.get(i);
+				System.out.printf( "%-15s %-5s %-15s %n", oC.getName(), oC.getParty(), oC.getMotto());
+			}
 		}
+		else {
+			ArrayList<Character> partyNames = new ArrayList<Character>();
+		     StringTokenizer st = new StringTokenizer(userInput);
+		     while (st.hasMoreTokens()) {
+		         String party = st.nextToken().toLowerCase();
+		    	 partyNames.add(party.charAt(0));
+		     }
+			for(int i=0; i<partyNames.size(); i++){
+				switch (partyNames.get(i)){
+				case 'd':
+					System.out.println("Democrats:");
+					for (int j = 0; j<democrats.size(); j++) {
+						Candidate oC = democrats.get(j);
+						System.out.printf( "%-15s %-5s %-15s %n", oC.getName(), oC.getParty(), oC.getMotto());
+					}
+					break;
+				case 'r':
+					System.out.println("Republicans:");
+					for (int j = 0; j<republicans.size(); j++) {
+						Candidate oC = republicans.get(j);
+						System.out.printf( "%-15s %-5s %-15s %n", oC.getName(), oC.getParty(), oC.getMotto());
+					}
+					break;
+				case 'i':
+					System.out.println("Independents:");
+					for (int j = 0; j<independent.size(); j++) {
+						Candidate oC = independent.get(j);
+						System.out.printf( "%-15s %-5s %-15s %n", oC.getName(), oC.getParty(), oC.getMotto());
+					}
+					break;
+				case 'o':
+					System.out.println("Others:");
+					for (int j = 0; j<other.size(); j++) {
+						Candidate oC = other.get(j);
+						System.out.printf( "%-15s %-5s %-15s %n", oC.getName(), oC.getParty(), oC.getMotto());
+					}
+					break;
+				default:
+					System.out.println("No party "+partyNames.get(i)+" found");
+				}
+			}
+		}
+		
 	}
 	
+	/*The menu method scans for a user*/
 	public static boolean menu(ArrayList<Candidate> alc, ArrayList<Integer> counter) {
 		Scanner scan = new Scanner(System.in);
 		String input;
@@ -112,14 +184,14 @@ public class ArrayListTest {
 					partyReport(alc);
 					break;
 				default:
-					if (a=='q' || a=='Q'){
-						counter.set(6, counter.get(6)+1);
+					if (a=='q' || a=='Q') {
+						counter.set(6,counter.get(6)+1);
 						break;
 					}
-					else {
-						counter.set(7, counter.get(7)+1);
-						System.out.println("Not an option.");
-						break;
+					else{
+					counter.set(7, counter.get(7)+1);
+					System.out.println("Not an option.");
+					break;
 					}
 				}
 			}
@@ -162,7 +234,59 @@ public class ArrayListTest {
 		}
 		if (spaceCounter == 1 || userInput.equals("all")) {
 			if (userInput.equals("all")) {
-				System.out.println("you typed in all");
+				ArrayList <Candidate> presidents = new ArrayList<Candidate>();
+				ArrayList <Candidate> governors = new ArrayList<Candidate>();
+				ArrayList <Candidate> mayors = new ArrayList<Candidate>();
+				ArrayList <Candidate> instructors = new ArrayList<Candidate>();
+				for (int i = 0; i<alc.size(); i++) {
+					char office = alc.get(i).getOffice().toLowerCase().charAt(0);
+					switch (office) {
+					case 'p':
+						presidents.add(alc.get(i));
+						break;
+					case 'g':
+						governors.add(alc.get(i));
+						break;
+					case 'm':
+						mayors.add(alc.get(i));
+						break;
+					case 'i':
+						instructors.add(alc.get(i));
+						break;
+					}
+				}
+				String thisState = "";
+				int voteCount=0;
+				int count=0;
+				for (int i = 0; i<presidents.size(); i++) {
+					Candidate oC = presidents.get(i);
+					if(oC.getState().equalsIgnoreCase(thisState)==false) {
+						thisState=oC.getState();
+						System.out.println("\n"+thisState);
+						voteCount=0;
+						count=0;	
+					}
+					voteCount+=oC.getVotes();
+					count++;
+					System.out.printf("%-19s %-11s %n", oC.getName(), oC.getVotes());
+					
+				}
+				
+//				for (int i = 0; i<states.size(); i++) {
+//					String thisState = states.get(i);
+//					int voteCount = 0;
+//					int raceCount = 0;
+//					System.out.println(thisState);
+//						for (int j = 0; j<alc.size(); j++) {
+//							Candidate oC = alc.get(j);
+//							if(oC.getState().equalsIgnoreCase(thisState)==true && oC.getOffice().equalsIgnoreCase("president")==true) {
+//								voteCount+=oC.getVotes();
+//								raceCount++;
+								
+								//System.out.printf("%-19s %-11s %n", oC.getName(), oC.getVotes());
+//							}
+//						}
+//				}
 			}
 			else {
 			String [] parts = userInput.split(" ");
@@ -403,20 +527,27 @@ public class ArrayListTest {
 			return false;
 		}
 		if (partyName != " ") {
-		System.out.println(partyName);
-		for (int i = 0; i<sortParameter.size(); i++) {
-			Candidate oC = sortParameter.get(i);
-			System.out.printf("%-19s %-15s %-10s %n", oC.getName(),oC.getOffice(),oC.getState());
-		}
+			System.out.println(partyName);
+			for (int i = 0; i<sortParameter.size(); i++) {
+				Candidate oC = sortParameter.get(i);
+				System.out.printf("%-19s %-15s %-10s %n", oC.getName(),oC.getOffice(),oC.getState());
+			}
 		}
 		return true;
 		
 	}
 	
-	public static boolean finalStats(ArrayList<Integer>counter) {
+	public static boolean finalStats(ArrayList<Integer>counter)throws IOException {
+		FileOutputStream ofile = new FileOutputStream("finalStats.txt",false);
+		PrintWriter pw = new PrintWriter(ofile);
 		System.out.println("Final Stats:");
+		pw.println("Final Stats:");
 		System.out.printf("%-5s %-5s %-5s %-5s %-5s %-5s %-5s %-5s %n", 'L', 'C', 'V', 'S', 'D', 'P', 'Q', "Bad");
-		System.out.printf("%-5s %-5s %-5s %-5s %-5s %-5s %-5s %-5s", counter.get(0), counter.get(1), counter.get(2),counter.get(3), counter.get(4), counter.get(5), counter.get(6), counter.get(7));
+		System.out.printf("%-5s %-5s %-5s %-5s %-5s %-5s %-5s %-5s %n", counter.get(0), counter.get(1), counter.get(2),counter.get(3), counter.get(4), counter.get(5), counter.get(6), counter.get(7));
+		pw.printf("%-5s %-5s %-5s %-5s %-5s %-5s %-5s %-5s %n", 'L', 'C', 'V', 'S', 'D', 'P', 'Q', "Bad");
+		pw.printf("%-5s %-5s %-5s %-5s %-5s %-5s %-5s %-5s", counter.get(0), counter.get(1), counter.get(2),counter.get(3), counter.get(4), counter.get(5), counter.get(6), counter.get(7));
+		System.out.println("Saved to finalStats.txt");
+		pw.close();
 		return true;
 	}
 }
