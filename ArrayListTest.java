@@ -16,12 +16,23 @@ public class ArrayListTest {
 		String state;
 		int numReps;
 		line = canScan.nextLine();
+		while(line.charAt(0)=='#') {
+			String garbage = line;
+			line = canScan.nextLine();
+		}	
 		while(!line.equals("END_OF_FILE")) {
 			state = line;
+			while(!canScan.hasNextInt()) {
+				String garbage = canScan.nextLine();
+			}
 			numReps = canScan.nextInt();
 			canScan.nextLine();
 			for(int i=0;i<numReps;i++){
 				line = canScan.nextLine();
+				while(line.charAt(0)=='#'){
+					String garbage = line;
+					line = canScan.nextLine();
+				}
 				//calls constructor for candidate in array
 				Candidate c = new Candidate();
 				//splits line into parts
@@ -138,7 +149,7 @@ public class ArrayListTest {
 		
 	}
 	
-	/*The menu method scans for a user*/
+	/*The menu method displays a list of options to the user. The user types in a char and the report is run. Only 1 letter inputs will be accepted*/
 	public static boolean menu(ArrayList<Candidate> alc, ArrayList<Integer> counter) {
 		Scanner scan = new Scanner(System.in);
 		String input;
@@ -198,6 +209,7 @@ public class ArrayListTest {
 		return true;
 	}
 	
+	/*The candidate report method asks the user for a name and displays all attributes of the candidate if the name is found.*/
 	public static boolean candidateReport(ArrayList<Candidate> alc) {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Enter a name: ");
@@ -221,6 +233,7 @@ public class ArrayListTest {
 		}
 	}
 	
+	/*The vote report method asks for a state and office and will display candidates in the election and their percentage of votes. If user enters all, results of all election races will display*/
 	public static boolean voteReport(ArrayList<Candidate> alc) {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Enter state and office (ex. illinois president) OR 'all':");
@@ -331,6 +344,7 @@ public class ArrayListTest {
 		return true;
 	}
 	
+	/*The state report method asks for a state and displays all candidates from that state, office, party, and their dollars spent. It also displays total and average dollars spent in the state. Typing in all prints all states.*/
 	public static boolean stateReport(ArrayList<Candidate> alc) {
 		Scanner scan = new Scanner(System.in);
 		System.out.println("Enter state OR 'all':");
@@ -382,6 +396,7 @@ public class ArrayListTest {
 		}
 		}
 	
+	/*The dollars spent report method asks for a candidate name and displays all candidates from a state and the dollars they spent. If the user types in all, displays all dollars spent by party.*/
 	public static boolean dollarsSpentReport(ArrayList<Candidate> alc) {
 		ArrayList <Candidate> democrats = new ArrayList<Candidate>();
 		ArrayList <Candidate> republicans = new ArrayList<Candidate>();
@@ -452,6 +467,7 @@ public class ArrayListTest {
 		}
 	}
 	
+	/*The party report method asks for a party and displays all candidates in the party. If all, all candidates are displayed by party.*/
 	public static boolean partyReport(ArrayList<Candidate> alc) {
 		ArrayList <Candidate> democrats = new ArrayList<Candidate>();
 		ArrayList <Candidate> republicans = new ArrayList<Candidate>();
@@ -537,6 +553,7 @@ public class ArrayListTest {
 		
 	}
 	
+	/*The final stats method displays the counter and prints final stats to a file*/
 	public static boolean finalStats(ArrayList<Integer>counter)throws IOException {
 		FileOutputStream ofile = new FileOutputStream("finalStats.txt",false);
 		PrintWriter pw = new PrintWriter(ofile);
