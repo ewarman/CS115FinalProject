@@ -1,0 +1,3 @@
+Final Stats:
+L     C     V     S     D     P     O     Q     Bad   
+0     0     1     0     0     0     1     1     0    
